@@ -1,35 +1,44 @@
 <template>
-  <Teleport to="body">
+  <!-- <Teleport to="body">
     <Transition name="modal-fade">
       <div class="modal-wrapper" @click.self="store.closeModal" v-if="store.modalState?.component" aria-modal="true"
         role="dialog" tabindex="-1">
         <component :is="store.modalState?.component" v-bind="store.modalState?.props" />
       </div>
     </Transition>
-  </Teleport>
+  </Teleport> -->
+  <div class="modal-wrapper" aria-modal="true" role="dialog" tabindex="-1">
+    <div class="inner">
+      <ModalCloseButton @click="$emit('closePopup')" />
+
+      <slot></slot>
+
+    </div>
+  </div>
 </template>
 
 <script setup>
-import { onMounted, onUnmounted } from "vue";
-import { useModalStore } from "@/stores/modal";
+import ModalCloseButton from './ModalCloseButton.vue'
+// import { onMounted, onUnmounted } from "vue";
+// import { useModalStore } from "@/stores/modal";
 
-const store = useModalStore();
+// const store = useModalStore();
 
-// Make a function that will trigger on keydown
-function keydownListener(event) {
-  // Assert the key is escape
-  if (event.key === "Escape") store.closeModal();
-}
+// // Make a function that will trigger on keydown
+// function keydownListener(event) {
+//   // Assert the key is escape
+//   if (event.key === "Escape") store.closeModal();
+// }
 
-// Attach event listener on mount
-onMounted(() => {
-  document.addEventListener("keydown", keydownListener);
-});
+// // Attach event listener on mount
+// onMounted(() => {
+//   document.addEventListener("keydown", keydownListener);
+// });
 
-// Clean up on unmount
-onUnmounted(() => {
-  document.removeEventListener("keydown", keydownListener);
-});
+// // Clean up on unmount
+// onUnmounted(() => {
+//   document.removeEventListener("keydown", keydownListener);
+// });
 </script>
 
 <style lang="scss">
@@ -77,7 +86,8 @@ onUnmounted(() => {
       flex-direction: column;
       gap: 12px;
       margin-top: 16px;
-      max-width: 308px;
+      min-width: 308px;
+      width: 100%;
 
       .form-item {
         display: flex;
@@ -99,16 +109,17 @@ onUnmounted(() => {
           line-height: 16px;
           letter-spacing: 0em;
           text-align: left;
-          border: 1px solid #C2C2C2;
+          border: 1px solid #c2c2c2;
           border-radius: 4px;
           padding: 8px 12px;
           margin-top: 5px;
+          width: 100%;
+          outline: 1px solid rgba(0, 0, 0, 0.2);
 
           &::placeholder {
-            color: #A6A6A6;
+            color: #a6a6a6;
           }
         }
-
       }
 
       .btn {

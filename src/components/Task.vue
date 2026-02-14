@@ -1,40 +1,30 @@
+<script setup>
+import useBoardStore from "../stores/boardStore";
+import Spacer from "./atom/Spacer.vue";
+defineProps(["task"]);
+const store = useBoardStore()
+</script>
+
 <template>
-  <div class="task">
-    <h3>
-      {{ task.name }}
-    </h3>
-    <p>
-      {{ task.description }}
-    </p>
-    <span>
-      {{ task.project.name }}
-    </span>
-    <div class="task-check">
-      <input type="checkbox" :id="task.id" :checked="task.completed" @change="updateTaskStatus" />
-      <label :for="task.id">
-        {{ task.completed ? 'Done' : 'To-Do' }}
-      </label>
+  <div>
+    <div class="task">
+      <h3>
+        {{ task.name || '' }}
+      </h3>
+      <p>
+        {{ task.description }}
+      </p>
+      <div class="task-check">
+        <input
+          type="checkbox"
+          :checked="task.completed"
+          @click="$emit('toggleTask', task.id)"
+        />
+        <label> {{ task.completed ? "Done" : "Todo" }} </label>
+      </div>
     </div>
   </div>
 </template>
-
-<script setup>
-import { useTaksManagerStore } from '@/stores/task-manger';
-
-const { updateTaskState } = useTaksManagerStore()
-
-const props = defineProps({
-  task: {
-    type: Object,
-    required: true
-  }
-})
-
-const updateTaskStatus = (event) => {
-  updateTaskState(props.task.id, event.target.checked)
-}
-
-</script>
 
 <style lang="scss" scoped>
 .task {
@@ -42,11 +32,13 @@ const updateTaskStatus = (event) => {
   flex-direction: column;
   background-color: var(--white-color);
   color: var(--black-color);
-  padding: 16px;
+  padding: 20px;
   border-radius: 12px;
+  position: relative;
+  border: 1px solid rgb(41, 40, 40);
 
   h3 {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 700;
     line-height: 21px;
     letter-spacing: 0em;
@@ -54,35 +46,25 @@ const updateTaskStatus = (event) => {
   }
 
   p {
-    margin-top: 12px;
-    font-size: 12px;
+    margin-top: 24px;
+    margin-bottom: 12px;
+    font-size: 16px;
     font-weight: 400;
     line-height: 16px;
     letter-spacing: 0em;
     text-align: left;
   }
 
-  span {
-    margin-top: 12px;
-    background-color: var(--gray-color);
-    border-radius: 6px;
-    width: fit-content;
-    padding-inline: 14px;
-    font-size: 10px;
-    font-weight: 400;
-    line-height: 13px;
-    letter-spacing: 0em;
-    text-align: left;
-  }
-
   .task-check {
-    align-self: end;
     display: flex;
     align-items: center;
-
+    justify-content: center;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
 
     label {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 400;
       line-height: 16px;
       letter-spacing: 0em;
@@ -98,17 +80,16 @@ const updateTaskStatus = (event) => {
       width: 18px;
       height: 18px;
       border-radius: 100%;
-      border: 0.77px solid #AEAEB2;
+      border: 0.77px solid #aeaeb2;
       appearance: none;
       cursor: pointer;
 
-
       &:checked {
-        background-color: #0A7AFF;
-        border-color: #0A7AFF;
+        background-color: #0a7aff;
+        border-color: #0a7aff;
 
         &::before {
-          content: '';
+          content: "";
           display: block;
           width: 4.5px;
           height: 9px;
