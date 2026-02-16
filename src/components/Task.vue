@@ -14,14 +14,7 @@ const store = useBoardStore()
       <p>
         {{ task.description }}
       </p>
-      <div class="task-check">
-        <input
-          type="checkbox"
-          :checked="task.completed"
-          @click="$emit('toggleTask', task.id)"
-        />
-        <label> {{ task.completed ? "Done" : "Todo" }} </label>
-      </div>
+    
     </div>
   </div>
 </template>
