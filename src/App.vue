@@ -1,20 +1,21 @@
 <script setup>
 import { ref, reactive, computed } from "vue";
-//import Task from "./components/Task.vue";
 import TasksColumn from "./components/TasksColumn.vue";
 import Board from "./components/Board.vue";
 import Filter from "./components/Filter.vue";
 import ModalWindow from "./components/Modals/ModalWindow.vue";
-import AddTaskModal from "./components/Modals/AddTaskModal.vue";
+import PopoverBase from "./components/popover/PopoverBase.vue"
+import AddTaskModal from "./components/Modals/AddNewTaskModal.vue";
 import AddColumnModal from "./components/Modals/AddColumnModal.vue";
 import useTasksStore from "./stores/taskStore.js";
 import useBoardStore from "./stores/boardStore.js";
+import { useModalStore } from "@/stores/modal";
 
-let storeBoard = useBoardStore();
+const storeBoard = useBoardStore();
+const modalStore = useModalStore();
 
 const appName = "Task manager";
 let modalIsActive = ref(false);
-
 </script>
 
 <template>
@@ -26,24 +27,25 @@ let modalIsActive = ref(false);
         </h1>
       </div>
       <div class="header-side">
-        <button class="btn secondary" @click="modalIsActive = true">
+        <button
+          class="btn secondary"
+          @click="modalStore.openModal(AddTaskModal , {})"
+        >
           + Add Task
         </button>
       </div>
     </div>
 
-    <ModalWindow v-if="storeBoard.isModalCol" @closePopup="storeBoard.isModalCol = false">
-      <AddColumnModal />
-    </ModalWindow>
     <div class="tasks">
       <!-- <Task @toggleTask="toggleTask" v-for="(task, index) in tasks" :task="task" :key="index" /> -->
       <!-- <TasksColumn /> -->
       <Board />
     </div>
 
-    <ModalWindow v-if="modalIsActive" @closePopup="modalIsActive = false">
-      <AddTaskModal />
-    </ModalWindow>
+
+    <ModalWindow />
+    <PopoverBase />
+
   </main>
 </template>
 
@@ -53,7 +55,6 @@ let modalIsActive = ref(false);
   justify-content: space-between;
   align-items: center;
   margin-bottom: 40px;
-  
 
   .header-side {
     display: flex;

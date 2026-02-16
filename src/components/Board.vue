@@ -3,22 +3,25 @@
 import useBoardStore from "@/stores/boardStore";
 import { storeToRefs } from "pinia";
 import TasksColumn from "./TasksColumn.vue";
+import { useModalStore } from "@/stores/modal.js";
+import AddColumnModal from "@/components/Modals/AddColumnModal.vue";
 
 const store = useBoardStore();
+const modalStore = useModalStore();
 const { boards } = storeToRefs(store);
 </script>
 
 <template>
   <div>
     <div class="board">
-        <div v-for="(column, index) in boards[1].columnOrder" :key="index">
-          <TasksColumn
-            :column="boards[1].columns[column]"
-            @drop="store.onDrop(boards[1].columns[column].columnId)"
-            @dragover.prevent
-          />
-        </div>
-      <button @click="store.isModalCol = true">+ add</button>
+      <div v-for="(column, index) in boards[1].columnOrder" :key="index">
+        <TasksColumn
+          :column="boards[1].columns[column]"
+          @drop="store.onDrop(boards[1].columns[column].columnId)"
+          @dragover.prevent
+        />
+      </div>
+      <button @click="modalStore.openModal(AddColumnModal, {})">+ add</button>
     </div>
   </div>
 </template>

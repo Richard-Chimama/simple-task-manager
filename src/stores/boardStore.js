@@ -22,28 +22,32 @@ const useBoardStore = defineStore("boards", () => {
           3: {
             columnId: 3,
             columnName: "DONE",
-            taskIds: [6,7],
+            taskIds: [6, 7],
           },
         },
       },
-    }
+    },
   };
 
   const boards = ref(data.boards);
   let isModalTask = ref(false);
   let isModalCol = ref(false);
   let draggedItem = ref(null);
- 
 
-  function addColumn(boardId, colName) {
-    const getboard = boards.value.find((board) => board.boardId == boardId);
-    const colId = Math.max(...getboard.columns.map((task) => task.id)) + 1;
-
-    getboard.columns.push({
+  function addColumn(colName) {
+    let board = boards.value[1];
+    const colId = Object.keys(board.columns).length + 1;
+    board.columns[colId] = {
       columnId: colId,
       columnName: colName,
-      tasks: [],
-    });
+      taskIds: [],
+    };
+    board.columnOrder.push(colId);
+  }
+
+  function addTaskToColumn(taskId) {
+    const task = boards.value[1].columns[1].taskIds;
+    task.push(taskId);
   }
 
   function onDragStart(taskObj) {
@@ -52,16 +56,14 @@ const useBoardStore = defineStore("boards", () => {
 
   const onDrop = (colId) => {
     if (draggedItem.value) {
-      let data = {...draggedItem.value}
-      data.destColId = colId
-      console.log("Your dragged Item: ", draggedItem.value);
-      console.log("Your data: ", data);
-      
+      let data = { ...draggedItem.value };
+      data.destColId = colId;
+
       const source = boards.value[1].columns[data.sourceColumnId];
       const dest = boards.value[1].columns[data.destColId];
 
-      source.taskIds = source.taskIds.filter(id => id !== data.taskId);
-      dest.taskIds.push(data.taskId)
+      source.taskIds = source.taskIds.filter((id) => id !== data.taskId);
+      dest.taskIds.push(data.taskId);
     }
   };
 
@@ -73,8 +75,8 @@ const useBoardStore = defineStore("boards", () => {
     addColumn,
     onDragStart,
     onDrop,
+    addTaskToColumn,
   };
 });
 
 export default useBoardStore;
-

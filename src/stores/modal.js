@@ -3,16 +3,15 @@ import { defineStore } from "pinia";
 import AddNewTaskModal from "@/components/Modals/AddNewTaskModal.vue";
 import AddNewProjectModal from "@/components/Modals/AddNewProjectModal.vue";
 
-const basicState = { component: null };
+const basicState = { component: null, props:{} };
 
 export const useModalStore = defineStore("modal-store", () => {
   const modalState = shallowRef(basicState);
 
-  function openModal(payload) {
-    const { component } = payload;
+  function openModal(component, props ={}) {
+    modalState.value = { component, props };
     const body = document.body;
     if (body) body.style.overflow = "hidden";
-    modalState.value = { component };
   }
 
   function closeModal() {
@@ -25,7 +24,7 @@ export const useModalStore = defineStore("modal-store", () => {
     openModal({ component: AddNewTaskModal });
   }
 
-  function openAddProjectModal() {
+  function openAddBoardModal() {
     openModal({ component: AddNewProjectModal });
   }
 
@@ -34,6 +33,6 @@ export const useModalStore = defineStore("modal-store", () => {
     openModal,
     closeModal,
     openAddTaskModal,
-    openAddProjectModal,
+    openAddBoardModal,
   };
 });

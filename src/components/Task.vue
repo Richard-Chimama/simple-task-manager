@@ -35,7 +35,7 @@ const store = useBoardStore()
   padding: 20px;
   border-radius: 12px;
   position: relative;
-  border: 1px solid rgb(41, 40, 40);
+  border: 1px solid rgba(41, 40, 40, 0.2);
 
   h3 {
     font-size: 20px;

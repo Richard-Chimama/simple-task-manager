@@ -1,134 +1,67 @@
 <template>
-  <!-- <Teleport to="body">
+  <Teleport to="body">
     <Transition name="modal-fade">
-      <div class="modal-wrapper" @click.self="store.closeModal" v-if="store.modalState?.component" aria-modal="true"
-        role="dialog" tabindex="-1">
-        <component :is="store.modalState?.component" v-bind="store.modalState?.props" />
+      <div
+        v-if="store.modalState?.component"
+        class="modal-mask"
+        @click.self="store.closeModal"
+        aria-modal="true"
+        role="dialog"
+      >
+        <div class="modal-container">
+          <ModalCloseButton class="closeButton" @click="store.closeModal" />
+
+          <component
+            :is="store.modalState.component"
+            v-bind="store.modalState.props"
+          />
+        </div>
       </div>
     </Transition>
-  </Teleport> -->
-  <div class="modal-wrapper" aria-modal="true" role="dialog" tabindex="-1">
-    <div class="inner">
-      <ModalCloseButton @click="$emit('closePopup')" />
-
-      <slot></slot>
-
-    </div>
-  </div>
+  </Teleport>
 </template>
 
 <script setup>
-import ModalCloseButton from './ModalCloseButton.vue'
-// import { onMounted, onUnmounted } from "vue";
-// import { useModalStore } from "@/stores/modal";
+import { onMounted, onUnmounted } from "vue";
+import { useModalStore } from "@/stores/modal";
+import ModalCloseButton from "./ModalCloseButton.vue";
 
-// const store = useModalStore();
+const store = useModalStore();
 
-// // Make a function that will trigger on keydown
-// function keydownListener(event) {
-//   // Assert the key is escape
-//   if (event.key === "Escape") store.closeModal();
-// }
+// Handle Escape Key
+const handleKeydown = (e) => {
+  if (e.key === "Escape") store.closeModal();
+};
 
-// // Attach event listener on mount
-// onMounted(() => {
-//   document.addEventListener("keydown", keydownListener);
-// });
-
-// // Clean up on unmount
-// onUnmounted(() => {
-//   document.removeEventListener("keydown", keydownListener);
-// });
+onMounted(() => window.addEventListener("keydown", handleKeydown));
+onUnmounted(() => window.removeEventListener("keydown", handleKeydown));
 </script>
 
-<style lang="scss">
-.modal-wrapper {
+<style lang="scss" scoped>
+.modal-mask {
   position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 500;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.6);
-
+  inset: 0;
+  z-index: 1000;
+  background: rgba($color: black, $alpha: 0.6);
   display: grid;
   place-items: center;
-  color: var(--black-color);
+  backdrop-filter: blur(2px);
+}
 
-  .inner {
-    background-color: white;
-    padding: 30px;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    max-width: 614px;
-    width: 100%;
+.modal-container {
+  background: #fff;
+  padding: 10px 30px 40px 30px;
+  border-radius: 12px;
+  position: relative;
+  width: 90%;
+  max-width: 614px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
 
-    h2 {
-      font-size: 16px;
-      font-weight: 700;
-      line-height: 21px;
-      letter-spacing: 0em;
-      text-align: left;
-    }
-
-    .close-btn {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      cursor: pointer;
-      background-color: var(--white-color);
-    }
-
-    .form {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 16px;
-      min-width: 308px;
-      width: 100%;
-
-      .form-item {
-        display: flex;
-        flex-direction: column;
-
-        label {
-          font-size: 12px;
-          font-weight: 500;
-          line-height: 16px;
-          letter-spacing: 0em;
-          text-align: left;
-        }
-
-        input,
-        select,
-        textarea {
-          font-size: 12px;
-          font-weight: 400;
-          line-height: 16px;
-          letter-spacing: 0em;
-          text-align: left;
-          border: 1px solid #c2c2c2;
-          border-radius: 4px;
-          padding: 8px 12px;
-          margin-top: 5px;
-          width: 100%;
-          outline: 1px solid rgba(0, 0, 0, 0.2);
-
-          &::placeholder {
-            color: #a6a6a6;
-          }
-        }
-      }
-
-      .btn {
-        width: fit-content;
-        padding-inline: 23px;
-        margin-top: 24px;
-      }
-    }
-  }
+// Transitions
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 0.3s ease;
 }
 
 .modal-fade-enter-from,
@@ -136,8 +69,19 @@ import ModalCloseButton from './ModalCloseButton.vue'
   opacity: 0;
 }
 
-.modal-fade-enter-active,
-.modal-fade-leave-active {
-  transition: 0.25s ease all;
+.closeButton {
+  position: absolute;
+  right: 35px;
+  height: 35px;
+  width: 35px;
+  background-color: #fff;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  &:hover {
+    border-radius: 100%;
+    background-color: rgb(197, 195, 195);
+    cursor: pointer;
+  }
 }
 </style>

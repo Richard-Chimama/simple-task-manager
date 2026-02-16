@@ -1,25 +1,29 @@
 <template>
   <div class="container" >
     <label for="title">Column Name</label>
-    <input type="text" name="title" v-model="title" />
-    <input type="button" class="button" value="add column" @click="addCol()" />
+    <input type="text" name="title" v-model="title" @keyup.enter="addCol" />
+    <input type="button" class="btn black" value="add column" @click="addCol" />
   </div>
 </template>
 
 <script setup>
 import useBoardStore from "@/stores/boardStore";
-import { ref } from 'vue'
+import { useModalStore } from "@/stores/modal"
+import { ref, computed } from 'vue'
 
 const store = useBoardStore();
+const modalStore = useModalStore();
 const title = ref('')
 
-function addCol() {
+const addCol = computed(()=> {
   if (title.value) {
-    store.addColumn(1, title.value);
+    store.addColumn(title.value);
     title.value = '';
-    store.isModalCol = false
+    modalStore.closeModal();
+  }else{
+    alert('Please enter a title')
   }
-}
+})
 </script>
 
 <style lang="scss"  scoped>
@@ -28,9 +32,11 @@ function addCol() {
     flex-direction: column;
     gap: 10px;
     width: 100%;
+    padding-top: 20px;
 
     & label {
         font-weight: bold;
+        color:#000000;
     }
 
     & input[type = "text"] {
@@ -41,11 +47,5 @@ function addCol() {
         border-radius: 8px;
     }
      
-     & .button {
-        height: 40px;
-        background-color:#000000;
-        color: white;
-        border-radius: 8px;
-    }
 }
 </style>

@@ -1,7 +1,9 @@
 import { defineStore } from "pinia";
 import { reactive, ref, computed } from "vue";
+import useBoardStore from "./boardStore";
 
 const useTasksStore = defineStore("tasks", () => {
+  const boardStore = useBoardStore();
   let tasks = reactive([
     {
       name: "Website design",
@@ -67,14 +69,12 @@ const useTasksStore = defineStore("tasks", () => {
     }
   });
 
-  function addTask() {
-    if (newTask.name && newTask.description) {
-      newTask.id = Math.max(...tasks.map((task) => task.id)) + 1;
-      tasks.push(newTask);
-      newTask = { name: "", description: "", completed: false };
-    } else {
-      alert("Please ensure to have both the title and description entered!");
-    }
+  function addTask(newTask) {
+    const nextId =
+      tasks.length > 0 ? Math.max(...tasks.map((t) => t.id)) + 1 : 1;
+    newTask.id = nextId;
+    tasks.push(newTask);
+    boardStore.addTaskToColumn(nextId);
   }
   function toggleTask(id) {
     tasks.forEach((t) => {
@@ -83,11 +83,11 @@ const useTasksStore = defineStore("tasks", () => {
       }
     });
   }
-  
 
   return {
     tasks,
     filterBy,
+    addTask,
     setFilter,
     filteredTasks,
   };
