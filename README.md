@@ -1,10 +1,8 @@
 # task-manager
+<img width="993" height="905" alt="Screenshot 2026-02-16 at 11 32 54" src="https://github.com/user-attachments/assets/110f1792-3fad-4c18-9c92-7710dc4e002f" />
 
-This template should help get you started developing with Vue 3 in Vite.
 
-## Recommended IDE Setup
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
 ## Customize configuration
 
